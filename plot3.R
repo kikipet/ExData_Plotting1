@@ -1,0 +1,18 @@
+download.file("https://d396qusza40orc.cloudfront.net/exdata%2Fdata%2Fhousehold_power_consumption.zip", "raw.zip", "curl")
+unzip("raw.zip")
+df <- read.csv("household_power_consumption.txt", sep=";", stringsAsFactors=FALSE)
+df$Date <- as.Date(df$Date, "%d/%m/%Y")
+df_spec <- subset(df, Date=="2007-02-01" | Date=="2007-02-02")
+df_spec$Time <- strptime(paste(df_spec$Date, df_spec$Time), "%Y-%m-%d %H:%M:%S")
+
+# plot 3
+df_spec$Sub_metering_1 <- as.numeric(df_spec$Sub_metering_1)
+df_spec$Sub_metering_2 <- as.numeric(df_spec$Sub_metering_2)
+df_spec$Sub_metering_3 <- as.numeric(df_spec$Sub_metering_3)
+png(file="plot3.png")
+plot(df_spec$Time, df_spec$Sub_metering_1, "l", main="", xlab="", ylab="")
+lines(df_spec$Time, df_spec$Sub_metering_2, col="red", main="", xlab="", ylab="")
+lines(df_spec$Time, df_spec$Sub_metering_3, col="blue", main="", xlab="", ylab="")
+legend("topright", legend=c("Sub_metering_1", "Sub_metering_2", "Sub_metering_3"), col=c("black", "red", "blue"), lty=1, cex=1)
+title(main="", xlab="", ylab="Energy sub metering")
+dev.off()
